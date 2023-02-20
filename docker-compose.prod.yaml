@@ -1,0 +1,9 @@
+version: '3'  
+services:
+  api_backend: 
+    build: .
+    image: nata/api:0.0.1
+    environment:
+      PORT: 1234
+      MONGO_USER: root
+      MONGO_PASSWORD: example
