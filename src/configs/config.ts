@@ -7,3 +7,4 @@ export const MONGO_IP = process.env.MONGO_IP || 'sample.sample.mongo.net'
 export const MONGO_USER = process.env.MONGO_USER
 export const MONGO_PASSWORD = process.env.MONGO_PASSWORD
 export const MONGO_URL = process.env.MONGO_URL
+export const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
