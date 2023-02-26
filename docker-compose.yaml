@@ -8,25 +8,27 @@ services:
       - PORT=1234
       - MONGO_USER=root
       - MONGO_PASSWORD=example
+      - MONGO_IP=172.20.0.2
+      - MONGO_PORT=27017
     ports:
       - 8080:1234
     volumes:
       - .:/app
       - /app/node_modules
+    depends_on:
+      - api_db
 
-# Run standalone mongo 
-    # depends_on:
-    #   - api_db
+  api_db:
+    image: mongo
+    container_name: api_db
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongo-db:/data/db
 
-  # api_db:
-  #   image: mongo
-  #   container_name: api_db
-  #   restart: always
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: root
-  #     MONGO_INITDB_ROOT_PASSWORD: example
-  #   volumes:
-  #     - mongo-db:/data/db
-
-# volumes:
-#   mongo-db:
+volumes:
+  mongo-db:

@@ -5,15 +5,14 @@ import cors from 'cors'
 import express from 'express'
 import mongoose from 'mongoose'
 
-import { MONGO_IP, MONGO_PASSWORD, MONGO_URL, MONGO_USER } from './configs/config'
+import { MONGO_IP, MONGO_PASSWORD, MONGO_PORT, MONGO_USER } from './configs/config'
 import { routes } from './routes'
 
 const app = express()
 
 // If running a standalone mongo, use connection string below instead
-// const mongoURL = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?authSource=admin`
+const mongoURL = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?authSource=admin`
 // const mongoURL = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}/?retryWrites=true&w=majority`
-const mongoURL = MONGO_URL
 
 mongoose.set('strictQuery', true)
 
