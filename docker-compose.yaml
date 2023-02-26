@@ -3,12 +3,14 @@ services:
   api_backend:
     build: .
     container_name: api
+    networks:
+      - trysts
     command: 'npm start'
     environment:
       - PORT=1234
       - MONGO_USER=root
       - MONGO_PASSWORD=example
-      - MONGO_IP=172.20.0.2
+      - MONGO_IP=api_db
       - MONGO_PORT=27017
     ports:
       - 8080:1234
@@ -21,6 +23,8 @@ services:
   api_db:
     image: mongo
     container_name: api_db
+    networks:
+      - trysts
     restart: always
     ports:
       - "27017:27017"
@@ -29,6 +33,10 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
       - mongo-db:/data/db
+
+networks:
+  trysts:
+    driver: bridge
 
 volumes:
   mongo-db:
