@@ -1,9 +1,11 @@
 import express from 'express'
 
-import { createUser } from '../controllers/user.controller'
+import { login, verifyOTP } from '../controllers/user.controller'
+import { logMiddleware } from '../middlewares/log.middleware'
 
 const userRouter = express.Router()
 
-userRouter.post('/', createUser)
+userRouter.post('/login', logMiddleware, login)
+userRouter.post('/verify-otp', logMiddleware, verifyOTP)
 
 export default userRouter
