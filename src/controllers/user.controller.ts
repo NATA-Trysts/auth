@@ -56,7 +56,7 @@ export const login = async (req: Request, res: Response) => {
       }
     })
   } catch (error) {
-    return APP_RESPONSE.badRequest(res, error)
+    return APP_RESPONSE.internalServerError(res, error)
   }
 }
 
@@ -90,7 +90,6 @@ export const verifyOTP = async (req: Request, res: Response) => {
         }
 
         return APP_RESPONSE.success(res, {
-          details: 'OTP is verified',
           accessToken,
           refreshToken,
         })
@@ -101,6 +100,6 @@ export const verifyOTP = async (req: Request, res: Response) => {
       return APP_RESPONSE.badRequest(res, 'OTP is expired')
     }
   } catch (err) {
-    return APP_RESPONSE.badRequest(res, err)
+    return APP_RESPONSE.internalServerError(res, err)
   }
 }

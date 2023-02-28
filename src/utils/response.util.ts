@@ -7,6 +7,13 @@ const badRequest = (res: Response, message: string) => {
   })
 }
 
+const internalServerError = (res: Response, message: string) => {
+  return res.status(500).json({
+    status: 'fail',
+    error: message,
+  })
+}
+
 const success = (res: Response, data: unknown) => {
   return res.status(200).json({
     status: 'success',
@@ -17,4 +24,5 @@ const success = (res: Response, data: unknown) => {
 export const APP_RESPONSE = {
   success,
   badRequest,
+  internalServerError,
 }

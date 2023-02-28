@@ -1,0 +1,191 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sample API",
+    "description": "This is a sample API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/user/login": {
+      "post": {
+        "summary": "Login and receive OTP via email",
+        "description": "Receive OTP via email and use this OTP to verify",
+        "parameters": [{
+          "name": "email",
+          "in": "body",
+          "description": "Email is used to login"
+        }],
+        "responses": {
+          "200": {
+            "description": "OTP data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/LoginResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/InternalServerError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email is not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/BadRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/verify-otp": {
+      "post": {
+        "summary": "Verify OTP",
+        "description": "Verify OTP",
+        "parameters": [{
+            "name": "email",
+            "in": "body",
+            "description": "Email is used to login"
+          },
+          {
+            "name": "otp",
+            "in": "body",
+            "description": "OTP is received via email"
+          },
+          {
+            "name": "hash",
+            "in": "body",
+            "description": "Hash is received via login response"
+          },
+          {
+            "name": "expirationTime",
+            "in": "body",
+            "description": "Expiration time is received via login response"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verify OTP successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/VerifyOTPResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/InternalServerError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Payload is not valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/BadRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BadRequest": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "error": {
+          "type": "string",
+          "example": "Email is not provided"
+        }
+      }
+    },
+    "InternalServerError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "error": {
+          "type": "string",
+          "example": "Internal server error"
+        }
+      }
+    },
+    "LoginResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "timestamp": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "hash": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "expirationTime": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      }
+    },
+    "VerifyOTPResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "accessToken": {
+              "type": "string"
+            },
+            "refreshToken": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
