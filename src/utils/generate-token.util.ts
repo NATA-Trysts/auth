@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken'
 
-export const generateToken = (user) => {
+export const generateToken = (email: string) => {
   try {
-    const payload = { email: user.email }
+    const payload = { email }
 
     const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: '10m',
+      expiresIn: '30m',
     })
 
     const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {

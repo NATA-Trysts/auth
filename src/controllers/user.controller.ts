@@ -1,7 +1,9 @@
 import { Request, Response } from 'express'
 import { sha256 } from 'js-sha256'
+import jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid'
 
+import { REFRESH_TOKEN_SECRET } from '../configs/config'
 import { emailSubject, generateLoginWithOTPMessage } from '../configs/user-verify-email-message'
 import { User } from '../models/user.model'
 import { compare } from '../utils/date.util'
@@ -101,5 +103,36 @@ export const verifyOTP = async (req: Request, res: Response) => {
     }
   } catch (err) {
     return APP_RESPONSE.internalServerError(res, err)
+  }
+}
+
+export const retrieveAccessToken = async (req: Request, res: Response) => {
+  const refreshToken = req.headers['x-refresh-token']
+
+  try {
+    const decodedRefreshToken = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET)
+    const { email } = decodedRefreshToken
+
+    try {
+      const user = await User.findOne({ email })
+
+      // One session when login only
+      if (user.refreshToken !== refreshToken) {
+        throw new Error('')
+      }
+
+      const { accessToken, refreshToken: newRefreshToken } = generateToken(email)
+
+      APP_RESPONSE.success(res, {
+        accessToken,
+        refreshToken: newRefreshToken,
+      })
+
+      User.updateOne({ email }, { refreshToken: newRefreshToken })
+    } catch (err) {
+      return APP_RESPONSE.internalServerError(res)
+    }
+  } catch (err) {
+    return APP_RESPONSE.unauthorized(res, 'Unauthorized refresh token')
   }
 }

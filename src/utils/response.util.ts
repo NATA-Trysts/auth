@@ -7,8 +7,15 @@ const badRequest = (res: Response, message: string) => {
   })
 }
 
-const internalServerError = (res: Response, message: string) => {
+const internalServerError = (res: Response, message = 'Internal server error') => {
   return res.status(500).json({
+    status: 'fail',
+    error: message,
+  })
+}
+
+const unauthorized = (res: Response, message: string) => {
+  return res.status(401).json({
     status: 'fail',
     error: message,
   })
@@ -25,4 +32,5 @@ export const APP_RESPONSE = {
   success,
   badRequest,
   internalServerError,
+  unauthorized,
 }

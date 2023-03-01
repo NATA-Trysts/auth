@@ -1,10 +1,13 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Sample API",
-    "description": "This is a sample API",
+    "title": "Trysts API 👻",
     "version": "1.0.0"
   },
+  "tags": [{
+    "name": "User",
+    "description": "General user endpoints"
+  }],
   "paths": {
     "/user/login": {
       "post": {
@@ -15,6 +18,7 @@
           "in": "body",
           "description": "Email is used to login"
         }],
+        "tags": ["User"],
         "responses": {
           "200": {
             "description": "OTP data",
@@ -53,6 +57,7 @@
       "post": {
         "summary": "Verify OTP",
         "description": "Verify OTP",
+        "tags": ["User"],
         "parameters": [{
             "name": "email",
             "in": "body",
@@ -107,6 +112,50 @@
           }
         }
       }
+    },
+    "/user/access-token": {
+      "get": {
+        "summary": "Retrieve new access token",
+        "description": "Retrieve new access token by refresh token incase access token is expired",
+        "tags": ["User"],
+        "parameters": [{
+          "name": "x-refresh-token",
+          "in": "header",
+          "description": "Refresh token"
+        }],
+        "responses": {
+          "200": {
+            "description": "Retrieve new access token successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/RetrieveAccessTokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized with refresh token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -120,6 +169,19 @@
         "error": {
           "type": "string",
           "example": "Email is not provided"
+        }
+      }
+    },
+    "Unauthorized": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "error": {
+          "type": "string",
+          "example": "Unauthorized"
         }
       }
     },
@@ -168,6 +230,26 @@
       }
     },
     "VerifyOTPResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "accessToken": {
+              "type": "string"
+            },
+            "refreshToken": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "RetrieveAccessTokenResponse": {
       "type": "object",
       "properties": {
         "status": {
